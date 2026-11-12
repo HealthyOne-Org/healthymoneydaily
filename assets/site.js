@@ -23,7 +23,16 @@
     cap('blog_download_cta_click',{site:SITE,placement:placement,store:'ios',app:'budget_shield',path:location.pathname});
   },true);
 
-  // Sticky bar (posts only): hidden for 7 days after the reader closes it.
+  // Sticky bar: posts carry it in their HTML; every other page (home, blog index, about...) gets it here (11-12).
+  // Hidden for 7 days after the reader closes it.
+  if(!document.getElementById('hmd-sticky')){
+    var b=document.createElement('div');b.id='hmd-sticky';b.setAttribute('role','region');b.setAttribute('aria-label','Budget Shield');b.hidden=true;
+    b.innerHTML='<div class="in"><img src="/assets/budget-shield.jpg" alt="" width="38" height="38">'+
+      '<span class="tx"><strong>Budget Shield</strong><span class="long">See your next 30 days of bills before they hit</span><span class="short">Your next 30 days of bills</span></span>'+
+      '<a class="btn btn-ink" data-placement="sticky" rel="noopener" href="https://apps.apple.com/app/id6766591206?pt=128318750&amp;ct=hmd_site_sticky&amp;mt=8">Get&nbsp;the&nbsp;app</a>'+
+      '<button id="hmd-sticky-close" aria-label="Close">&times;</button></div>';
+    document.body.appendChild(b);
+  }
   var K='hmd_bar_closed',bar=document.getElementById('hmd-sticky');
   if(bar){
     var until=0;try{until=parseInt(localStorage.getItem(K)||'0',10)}catch(e){}

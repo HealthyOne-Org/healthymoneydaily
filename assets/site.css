@@ -226,3 +226,15 @@ footer .disc a{color:var(--ink-2)}
   .js [data-reveal]{opacity:0;transform:translateY(18px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
   .js [data-reveal].in{opacity:1;transform:none}
 }
+
+/* Budget Shield bar on every page (11-12: only posts had it; copied from blog/_content/_template.html) */
+#hmd-sticky{position:fixed;left:0;right:0;bottom:0;z-index:60;background:color-mix(in srgb,var(--paper) 94%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--rule);padding:.65rem var(--gutter) calc(.65rem + env(safe-area-inset-bottom,0px))}
+#hmd-sticky .in{max-width:720px;margin:0 auto;display:flex;align-items:center;gap:.8rem}
+#hmd-sticky img{width:38px;height:38px;border-radius:9px;flex-shrink:0}
+#hmd-sticky .tx{flex:1;font-size:.88rem;color:var(--ink-2);line-height:1.3;min-width:0;display:flex;flex-direction:column}
+#hmd-sticky .tx strong{color:var(--ink);font-family:var(--display);font-weight:500;font-size:1.02rem}
+#hmd-sticky .btn{padding:.55rem 1rem;font-size:.85rem}
+#hmd-sticky button{background:none;border:0;color:var(--ink-3);font-size:1.6rem;cursor:pointer;line-height:1;padding:.2rem .3rem}
+body.has-sticky{padding-bottom:78px}
+#hmd-sticky .short{display:none}
+@media(max-width:520px){#hmd-sticky .long{display:none}#hmd-sticky .short{display:inline}#hmd-sticky .tx{font-size:.82rem}#hmd-sticky .btn{padding:.5rem .8rem;font-size:.8rem}}
