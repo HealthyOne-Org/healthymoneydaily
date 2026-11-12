@@ -12,7 +12,7 @@
   "fomc december 2026"
  ],
  "lane": "news",
- "art": "rates",
+ "image": {"key": "colonnade", "alt": "Morning light along a colonnade of pale stone columns, the kind of building where rate decisions are made"},
  "read_min": 7,
  "as_of": "November 12, 2026 (market odds as of 3:24 AM ET)",
  "excerpt": "Traders put the odds of a December hike near 87 percent. What a quarter point would actually do to a card balance, a car loan and your savings.",

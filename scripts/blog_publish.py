@@ -5,22 +5,27 @@ blog_publish.py: build a Healthy Money Daily post from blog/_content/<slug>.json
 Idempotent and safe to re-run. It:
   1. Checks the post against the money-content gates (scripts/CONTENT_GUIDELINES.md): word count, official
      sources, FAQ, no stock picks or "guaranteed" language, no "free" next to the app, no trading-bot talk.
-  2. Draws the header art blog/images/<slug>-hero.svg (calm SVG, no photos needed). With --pexels-key and
-     "image_queries" in the JSON it downloads a 1200x675 Pexels photo to <slug>-hero.jpg and uses that instead.
-     If Google Chrome is installed it also renders <slug>-og.png (1200x630) for social cards.
+  2. Picks the post's photo from the library (blog/_content/photos.json -> assets/photos/<key>-1600.webp and
+     -800.webp), falling back to the lane's photo, and crops a 1200x630 blog/images/<slug>-og.jpg for social cards.
   3. Renders blog/<slug>.html from blog/_content/_template.html (Budget Shield card at <!--MID-->, sources,
      FAQ + FAQPage JSON-LD, the disclaimer, CTA box, sticky bar, PostHog).
   4. Adds a card to the top of blog/index.html and refreshes the 3 newest on the homepage.
   5. Adds the URL to sitemap.xml and llms.txt, and marks the slug done in blog/_content/topics.json.
 
 Usage (repo root):
-  python3 -I scripts/blog_publish.py <slug> [--date YYYY-MM-DD] [--pexels-key KEY] [--dry]
+  python3 -I scripts/blog_publish.py <slug> [--date YYYY-MM-DD] [--dry]
+  # add a new photo to the library and set it as this post's image (then run the publish above):
+  python3 -I scripts/blog_publish.py <slug> --image-file PATH --image-alt "what the photo shows" \
+      --image-credit "Photographer" --image-credit-url https://unsplash.com/photos/<id>
 
 JSON schema (blog/_content/<slug>.json):
   slug, title, description, keywords[], lane, read_min, excerpt, body_html (with <!--MID-->),
   faq[{q,a}] (3+), bottom_line, sources[{name, url}] (2+, official first), cta_title, cta_text
-  optional: deck (subtitle under the title), art ("gift" | "rates" | "calendar" | "cart" | "jar" | "shield" |
-            "check"), as_of (for news posts: "November 11, 2026, 8:40 PM ET"), image_queries[], hero_credit
+  optional: deck (subtitle under the title), as_of (for news posts: "November 11, 2026, 8:40 PM ET"),
+            mid_card {title, text},
+            image: a key from blog/_content/photos.json (e.g. "colonnade"), or {"key": "...", "alt": "post-specific
+                   alt text"}. Missing -> the lane photo (news coffee-paper, howto planner-pen, prices kitchen-brass,
+                   check vintage-desk). "art" from older posts is ignored.
 """
 from __future__ import annotations
 
@@ -29,12 +34,7 @@ import datetime as dt
 import html as htmllib
 import json
 import re
-import shutil
-import subprocess
 import sys
-import tempfile
-import urllib.parse
-import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -124,170 +124,125 @@ def check(post: dict) -> list[str]:
     return errs
 
 
-# ---------------------------------------------------------------- art
-PAPER, GRID, INK, GREEN, GREEN2, SOFT, GOLD = "#F3EEE2", "#E4DCCB", "#14201A", "#1F5B41", "#2C7A55", "#DCE8DE", "#A8823A"
+# ---------------------------------------------------------------- photos
+# Every post has a photo. post["image"] is a key in blog/_content/photos.json (the library); the files are
+# assets/photos/<key>-1600.webp and <key>-800.webp. No image -> the lane's fallback below.
+LANE_IMAGE = {"news": "coffee-paper", "howto": "planner-pen", "prices": "kitchen-brass", "check": "vintage-desk"}
+PHOTOS_DIR = ROOT / "assets" / "photos"
+LIBRARY = CONTENT / "photos.json"
 
 
-def _frame(inner: str, label: str) -> str:
-    lines = "".join(f'<line x1="{x}" y1="0" x2="{x}" y2="630" />' for x in range(40, 1200, 40))
-    lines += "".join(f'<line x1="0" y1="{y}" x2="1200" y2="{y}" />' for y in range(30, 630, 40))
-    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" '
-            f'aria-label="{esc(label)}"><rect width="1200" height="630" fill="{PAPER}"/>'
-            f'<g stroke="{GRID}" stroke-width="1" opacity=".55">{lines}</g>{inner}</svg>\n')
+def load_library() -> dict:
+    if not LIBRARY.exists():
+        die(f"{LIBRARY.relative_to(ROOT)} is missing")
+    return {k: v for k, v in json.loads(LIBRARY.read_text()).items() if not k.startswith("_")}
 
 
-def art_gift() -> str:  # a December calendar with paydays and a gift envelope
-    cells = []
-    for i in range(35):
-        r, c = divmod(i, 7)
-        x, y = 600 + c * 76, 120 + r * 76
-        fill = SOFT
-        if i in (4, 18):
-            fill = GREEN
-        if i in (23, 24):
-            fill = GOLD
-        cells.append(f'<rect x="{x}" y="{y}" width="64" height="64" rx="10" fill="{fill}"/>')
-    env = (f'<g transform="translate(120 170) rotate(-6)"><rect width="360" height="240" rx="18" fill="{GREEN}"/>'
-           f'<path d="M0 18 L180 140 L360 18" fill="none" stroke="{PAPER}" stroke-width="6"/>'
-           f'<rect x="160" y="0" width="40" height="240" fill="{GOLD}" opacity=".9"/>'
-           f'<circle cx="180" cy="120" r="34" fill="{PAPER}"/><text x="180" y="134" text-anchor="middle" '
-           f'font-family="Georgia,serif" font-size="40" font-style="italic" fill="{GREEN}">$</text></g>')
-    return env + "".join(cells) + f'<rect x="596" y="116" width="524" height="2" fill="{INK}" opacity=".7"/>'
+def photo_for(post: dict, lib: dict) -> tuple[str, dict]:
+    img = post.get("image")
+    if isinstance(img, dict):  # {"key": "...", "alt": "optional override"}
+        key, alt = img.get("key", ""), img.get("alt")
+    else:
+        key, alt = (img or LANE_IMAGE[post["lane"]]), None
+    if key not in lib:
+        die(f"image {key!r} is not in {LIBRARY.relative_to(ROOT)}; add it with --image-file")
+    meta = dict(lib[key])
+    if alt:
+        meta["alt"] = alt
+    for w in (1600, 800):
+        if not (PHOTOS_DIR / f"{key}-{w}.webp").exists():
+            die(f"assets/photos/{key}-{w}.webp is missing")
+    return key, meta
 
 
-def art_rates() -> str:  # a stepped rate line rising, with a dashed "what if" step
-    pts = [(120, 470), (300, 470), (300, 430), (480, 430), (480, 400), (660, 400), (660, 380), (840, 380)]
-    d = "M" + " L".join(f"{x} {y}" for x, y in pts)
-    dots = "".join(f'<circle cx="{x}" cy="{y}" r="9" fill="{GREEN}"/>' for x, y in pts[1::2])
-    proj = f'<path d="M840 380 L840 340 L1060 340" fill="none" stroke="{GOLD}" stroke-width="8" stroke-dasharray="18 14"/>'
-    bars = "".join(f'<rect x="{150 + i * 120}" y="{520 - h}" width="64" height="{h}" rx="6" fill="{SOFT}"/>'
-                   for i, h in enumerate((60, 80, 95, 110, 120, 128, 150, 170)))
-    pct = (f'<text x="1010" y="250" text-anchor="middle" font-family="Georgia,serif" font-size="210" font-style="italic" '
-           f'fill="{GREEN}" opacity=".9">%</text>')
-    return (bars + f'<path d="{d}" fill="none" stroke="{GREEN}" stroke-width="10" stroke-linejoin="round"/>' + dots
-            + proj + pct + f'<rect x="100" y="520" width="1000" height="3" fill="{INK}" opacity=".75"/>')
+def picture(key: str, meta: dict, sizes: str, alt: str | None = None, lazy: bool = True, style: bool = True) -> str:
+    a = meta["alt"] if alt is None else alt
+    pos = f' style="object-position:{meta["pos"]}"' if style and meta.get("pos") else ""
+    return (f'<img src="/assets/photos/{key}-1600.webp" srcset="/assets/photos/{key}-800.webp 800w, '
+            f'/assets/photos/{key}-1600.webp 1600w" sizes="{sizes}" alt="{esc(a)}" width="{meta.get("w", 1600)}" '
+            f'height="{meta.get("h", 1066)}"' + (' loading="lazy" decoding="async"' if lazy else ' fetchpriority="high"')
+            + pos + ">")
 
 
-def art_calendar() -> str:
-    rows = "".join(
-        f'<rect x="150" y="{150 + i * 78}" width="900" height="58" rx="10" fill="{SOFT if i % 2 else PAPER}" stroke="{GRID}"/>'
-        f'<rect x="170" y="{168 + i * 78}" width="{140 + (i * 53) % 220}" height="22" rx="6" fill="{GREEN if i != 2 else GOLD}"/>'
-        f'<rect x="900" y="{168 + i * 78}" width="120" height="22" rx="6" fill="{INK}" opacity=".18"/>' for i in range(5))
-    return rows + f'<rect x="150" y="120" width="900" height="3" fill="{INK}" opacity=".75"/>'
-
-
-def art_cart() -> str:
-    return (f'<g fill="none" stroke="{GREEN}" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">'
-            f'<path d="M260 180 L330 180 L390 420 L800 420 L860 240 L360 240"/></g>'
-            f'<circle cx="430" cy="480" r="30" fill="{GREEN}"/><circle cx="760" cy="480" r="30" fill="{GREEN}"/>'
-            f'<g transform="translate(860 120) rotate(14)"><path d="M0 0 L150 0 L190 50 L150 100 L0 100 Z" fill="{GOLD}"/>'
-            f'<circle cx="150" cy="50" r="12" fill="{PAPER}"/></g>'
-            + "".join(f'<rect x="{420 + i * 90}" y="{290 - (i % 2) * 30}" width="70" height="{120 + (i % 2) * 30}" rx="8" '
-                      f'fill="{SOFT if i % 2 else GREEN2}"/>' for i in range(4)))
-
-
-def art_jar() -> str:
-    coins = "".join(f'<ellipse cx="{600 + ((i * 37) % 90) - 45}" cy="{470 - i * 26}" rx="70" ry="16" '
-                    f'fill="{GOLD if i % 3 else GREEN2}" stroke="{PAPER}" stroke-width="3"/>' for i in range(8))
-    return (f'<rect x="440" y="150" width="320" height="380" rx="60" fill="{SOFT}" stroke="{GREEN}" stroke-width="10"/>'
-            f'<rect x="470" y="110" width="260" height="50" rx="14" fill="{GREEN}"/>' + coins
-            + f'<rect x="120" y="530" width="960" height="3" fill="{INK}" opacity=".75"/>')
-
-
-def art_shield() -> str:
-    return (f'<path d="M600 90 L820 160 L820 330 C820 450 720 520 600 560 C480 520 380 450 380 330 L380 160 Z" '
-            f'fill="{GREEN}"/><path d="M450 400 L540 330 L600 370 L720 250" fill="none" stroke="{PAPER}" stroke-width="16" '
-            f'stroke-linecap="round" stroke-linejoin="round"/><path d="M690 245 L730 245 L730 285" fill="none" '
-            f'stroke="{PAPER}" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>'
-            f'<circle cx="1000" cy="160" r="60" fill="{GOLD}"/><circle cx="200" cy="470" r="40" fill="{SOFT}"/>')
-
-
-def art_check() -> str:
-    rows = ""
-    for i in range(5):
-        y = 150 + i * 80
-        box = (f'<rect x="300" y="{y}" width="44" height="44" rx="8" fill="{GREEN if i < 3 else PAPER}" stroke="{GREEN}" stroke-width="4"/>'
-               + (f'<path d="M310 {y + 22} L320 {y + 32} L336 {y + 12}" fill="none" stroke="{PAPER}" stroke-width="6"/>' if i < 3 else ""))
-        rows += box + f'<rect x="370" y="{y + 12}" width="{300 + (i * 97) % 240}" height="20" rx="6" fill="{INK}" opacity=".16"/>'
-    return rows + f'<circle cx="960" cy="200" r="80" fill="{GOLD}" opacity=".9"/>'
-
-
-ARTS = {"gift": art_gift, "rates": art_rates, "calendar": art_calendar, "cart": art_cart, "jar": art_jar,
-        "shield": art_shield, "check": art_check}
-DEFAULT_ART = {"news": "rates", "howto": "calendar", "prices": "cart", "check": "check"}
-
-
-def pexels_download(key: str, query: str, dest: Path) -> str | None:
-    url = "https://api.pexels.com/v1/search?" + urllib.parse.urlencode(
-        {"query": query, "per_page": 8, "orientation": "landscape", "size": "large"})
-    req = urllib.request.Request(url, headers={"Authorization": key, "User-Agent": "healthymoneydaily-blog/1.0"})
+def add_image(src: Path, key: str, alt: str, credit: str, credit_url: str, dry: bool) -> None:
+    """Optimise a new photo into the library: 1600px + 800px WebP, each under ~250 KB."""
     try:
-        with urllib.request.urlopen(req, timeout=30) as r:
-            data = json.load(r)
-    except Exception as e:  # noqa: BLE001
-        print(f"  pexels search failed: {e}")
-        return None
-    for photo in data.get("photos", []):
-        src = photo.get("src", {}).get("original")
-        if not src:
+        from PIL import Image
+    except ImportError:
+        die("--image-file needs Pillow (python3 -m pip install pillow)")
+    if not src.exists():
+        die(f"{src} not found")
+    if not alt or not credit:
+        die("--image-file needs --image-alt and --image-credit (photographer, or 'Hardaway Labs' for our own)")
+    im = Image.open(src).convert("RGB")
+    if im.width < 1600:
+        print(f"  warning: {src.name} is only {im.width}px wide")
+    size = None
+    for w in (1600, 800):
+        ww = min(w, im.width)
+        r = im.resize((ww, round(im.height * ww / im.width)), Image.LANCZOS)
+        if w == 1600:
+            size = r.size
+        out = PHOTOS_DIR / f"{key}-{w}.webp"
+        if dry:
             continue
-        try:
-            req2 = urllib.request.Request(f"{src}?auto=compress&cs=tinysrgb&fit=crop&w=1200&h=675",
-                                          headers={"User-Agent": "healthymoneydaily-blog/1.0"})
-            with urllib.request.urlopen(req2, timeout=60) as r, open(dest, "wb") as f:
-                shutil.copyfileobj(r, f)
-            if dest.stat().st_size > 20_000:
-                return f"Photo by {photo.get('photographer', 'a Pexels photographer')} via Pexels"
-        except Exception as e:  # noqa: BLE001
-            print(f"  pexels download failed: {e}")
-    return None
-
-
-def render_og(svg: Path, png: Path) -> bool:
-    """Screenshot the SVG with headless Chrome so social cards get a PNG. Optional."""
-    if not CHROME.exists():
-        return False
-    with tempfile.TemporaryDirectory() as td:
-        try:
-            subprocess.run([str(CHROME), "--headless=new", "--disable-gpu", "--hide-scrollbars", "--no-first-run",
-                            f"--user-data-dir={td}/prof", "--window-size=1200,630", f"--screenshot={png}",
-                            svg.resolve().as_uri()], capture_output=True, timeout=60)
-        except (OSError, subprocess.TimeoutExpired):
-            return False
-    return png.exists() and png.stat().st_size > 5_000
-
-
-def ensure_images(post: dict, pexels_key: str | None, dry: bool) -> tuple[str, str]:
-    """Returns (hero <figure> html, og image url)."""
-    slug, title = post["slug"], post["title"]
-    IMAGES.mkdir(parents=True, exist_ok=True)
-    jpg, svg, og = IMAGES / f"{slug}-hero.jpg", IMAGES / f"{slug}-hero.svg", IMAGES / f"{slug}-og.png"
-    credit = post.get("hero_credit", "")
-    if pexels_key and post.get("image_queries") and not jpg.exists() and not dry:
-        credit = pexels_download(pexels_key, post["image_queries"][0], jpg) or ""
-    if jpg.exists():
-        fig = (f'<figure class="hero-fig"><img src="/blog/images/{slug}-hero.jpg" alt="{esc(title)}" width="1200" '
-               f'height="675">' + (f'<figcaption>{esc(credit)}</figcaption>' if credit else "") + "</figure>")
-        return fig, f"{SITE}/blog/images/{slug}-hero.jpg"
-    art = post.get("art") or DEFAULT_ART[post["lane"]]
-    if art not in ARTS:
-        die(f"unknown art {art!r}; one of {sorted(ARTS)}")
+        PHOTOS_DIR.mkdir(parents=True, exist_ok=True)
+        q = 82
+        while True:
+            r.save(out, "WEBP", quality=q, method=6)
+            if out.stat().st_size < 250_000 or q <= 50:
+                break
+            q -= 6
+        print(f"  photo: {out.relative_to(ROOT)} ({out.stat().st_size // 1024} KB)")
+    lib = json.loads(LIBRARY.read_text())
+    lib[key] = {"alt": alt, "credit": credit, "credit_url": credit_url, "w": size[0], "h": size[1], "pos": "50% 50%",
+                "mood": "", "fits": []}
     if not dry:
-        svg.write_text(_frame(ARTS[art](), title))
-        print(f"  art: {svg.name} ({art})")
-        if render_og(svg, og):
-            print(f"  og: {og.name}")
-    fig = (f'<figure class="hero-fig"><img src="/blog/images/{slug}-hero.svg" alt="" width="1200" height="630">'
-           "</figure>")
-    og_url = f"{SITE}/blog/images/{slug}-og.png" if og.exists() else f"{SITE}/assets/og.png"
-    return fig, og_url
+        LIBRARY.write_text(json.dumps(lib, indent=1, ensure_ascii=False) + "\n")
+    print(f"  photos.json: {key} added")
+
+
+def render_og(key: str, slug: str, meta: dict, dry: bool) -> str:
+    """1200x630 JPEG for social cards, cropped from the photo. Falls back to the WebP itself."""
+    og = IMAGES / f"{slug}-og.jpg"
+    try:
+        from PIL import Image
+        if not dry:
+            IMAGES.mkdir(parents=True, exist_ok=True)
+            im = Image.open(PHOTOS_DIR / f"{key}-1600.webp").convert("RGB")
+            tw, th = 1200, 630
+            scale = max(tw / im.width, th / im.height)
+            im = im.resize((round(im.width * scale), round(im.height * scale)), Image.LANCZOS)
+            px, py = (float(v.rstrip("%")) / 100 for v in (meta.get("pos") or "50% 50%").split()[:2])
+            left, top = round((im.width - tw) * px), round((im.height - th) * py)
+            im.crop((left, top, left + tw, top + th)).save(og, "JPEG", quality=84, optimize=True, progressive=True)
+            print(f"  og: {og.relative_to(ROOT)} ({og.stat().st_size // 1024} KB)")
+        return f"{SITE}/blog/images/{slug}-og.jpg"
+    except ImportError:
+        return f"{SITE}/assets/photos/{key}-1600.webp"
+
+
+def ensure_images(post: dict, dry: bool) -> tuple[str, str]:
+    """Returns (hero <figure> html, og image url)."""
+    key, meta = photo_for(post, load_library())
+    credit = ""
+    if meta.get("credit"):
+        who = esc(meta["credit"])
+        if meta.get("credit_url"):
+            who = f'<a href="{esc(meta["credit_url"])}" rel="noopener">{who}</a>'
+        src = " / Unsplash" if "unsplash.com" in meta.get("credit_url", "") else ""
+        credit = f"<figcaption>Photo: {who}{src}</figcaption>"
+    fig = (f'<figure class="art-hero">{picture(key, meta, "(min-width: 1360px) 1360px, 100vw", lazy=False)}'
+           f'{credit}</figure>')
+    print(f"  photo: {key}" + ("" if post.get("image") else f" (lane fallback for {post['lane']})"))
+    return fig, render_og(key, post["slug"], meta, dry)
 
 
 # ---------------------------------------------------------------- render
 MID_CARD = """<aside class="app-card" aria-label="Budget Shield">
           <img src="/assets/budget-shield.jpg" alt="" width="64" height="64">
           <div class="t-wrap"><p class="t">{title}</p><p class="d">{text}</p></div>
-          <a class="btn btn-green" data-placement="mid" rel="noopener" href="https://apps.apple.com/app/id6766591206?pt=128318750&amp;ct=hmd_mid&amp;mt=8">See Budget Shield</a>
+          <a class="btn btn-line" data-placement="mid" rel="noopener" href="https://apps.apple.com/app/id6766591206?pt=128318750&amp;ct=hmd_mid&amp;mt=8">See Budget Shield</a>
         </aside>"""
 MID_DEFAULT = ("Budget Shield", "Lays out your next 30 days of bills and paychecks and warns you before a payment won't clear.")
 
@@ -336,14 +291,15 @@ def render(post: dict, date: dt.date, hero: str, og_url: str) -> str:
 
 def card(post: dict, date: dt.date, h: str = "h3") -> str:
     slug, title = post["slug"], esc(post["title"].strip())
-    img = f"{slug}-hero.jpg" if (IMAGES / f"{slug}-hero.jpg").exists() else f"{slug}-hero.svg"
+    key, meta = photo_for(post, load_library())
+    img = picture(key, meta, "(min-width: 760px) 50vw, 100vw", alt="", style=False)
     return (f'<article class="post" data-slug="{slug}">\n'
-            f'        <div>\n          <span class="tag">{LANES[post["lane"]]}</span>\n'
+            f'        <a class="thumb" href="/blog/{slug}" tabindex="-1" aria-hidden="true">{img}</a>\n'
+            f'        <div class="post-text">\n          <p class="tag">{LANES[post["lane"]]}</p>\n'
             f'          <{h}><a href="/blog/{slug}">{title}</a></{h}>\n'
-            f'          <p>{esc(post["excerpt"].strip())}</p>\n'
-            f'          <div class="meta">{human_date(date)} &middot; {post["read_min"]} min read</div>\n        </div>\n'
-            f'        <a class="thumb" href="/blog/{slug}" tabindex="-1" aria-hidden="true"><img src="/blog/images/{img}" '
-            f'alt="" loading="lazy" width="1200" height="630"></a>\n      </article>')
+            f'          <p class="excerpt">{esc(post["excerpt"].strip())}</p>\n'
+            f'          <p class="meta"><time datetime="{date.isoformat()}">{human_date(date)}</time>'
+            f'<span>{post["read_min"]} min read</span></p>\n        </div>\n      </article>')
 
 
 def splice(path: Path, start: str, end: str, new_card: str, slug: str, keep: int | None, dry: bool) -> None:
@@ -409,7 +365,10 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("slug")
     ap.add_argument("--date", help="YYYY-MM-DD (default: today, America/New_York)")
-    ap.add_argument("--pexels-key")
+    ap.add_argument("--image-file", help="add this photo to the library as <slug> and set it as the post's image")
+    ap.add_argument("--image-alt", default="")
+    ap.add_argument("--image-credit", default="")
+    ap.add_argument("--image-credit-url", default="")
     ap.add_argument("--dry", action="store_true", help="check and render, write nothing")
     a = ap.parse_args()
 
@@ -422,6 +381,15 @@ def main() -> None:
         die(f"{src.name} missing fields: {missing}")
     if post["slug"] != a.slug:
         die("slug in JSON does not match argument")
+    if a.image_file:
+        add_image(Path(a.image_file).expanduser(), a.slug, a.image_alt.strip(), a.image_credit.strip(),
+                  a.image_credit_url.strip(), a.dry)
+        post["image"] = a.slug
+        if not a.dry:
+            src.write_text(json.dumps(post, indent=1, ensure_ascii=False) + "\n")
+        print(f"  {src.name}: image set to {a.slug!r}. Now run: python3 -I scripts/blog_publish.py {a.slug} --dry")
+        return
+
     errs = check(post)
     if errs:
         die("content gates failed:\n  - " + "\n  - ".join(errs))
@@ -437,7 +405,7 @@ def main() -> None:
 
     words = len(plain(post["body_html"]).split())
     print(f"Publishing {a.slug} ({words} words, {len(post['faq'])} FAQ, {len(post['sources'])} sources) dated {date}")
-    hero, og_url = ensure_images(post, a.pexels_key, a.dry)
+    hero, og_url = ensure_images(post, a.dry)
     html = render(post, date, hero, og_url)
     out = BLOG / f"{a.slug}.html"
     if not a.dry:

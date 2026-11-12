@@ -1,8 +1,16 @@
-/* Healthy Money Daily: nav toggle, sticky Budget Shield bar, App Store click tracking (PostHog 458884). */
+/* Healthy Money Daily: nav toggle, reveal-on-scroll, sticky Budget Shield bar, App Store click tracking (PostHog 458884). */
 (function(){
   var SITE='healthymoneydaily';
   var nav=document.querySelector('.nav'),t=document.querySelector('.nav-toggle');
   if(t&&nav){t.addEventListener('click',function(){nav.classList.toggle('open');t.setAttribute('aria-expanded',nav.classList.contains('open'))});}
+
+  // Gentle fade-in as sections scroll into view. CSS only hides [data-reveal] when <html> has .js.
+  window.__hmdReady=true;
+  var els=document.querySelectorAll('[data-reveal]');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px',threshold:.08});
+    els.forEach(function(el){io.observe(el)});
+  }else{els.forEach(function(el){el.classList.add('in')})}
 
   function cap(ev,props){try{if(window.posthog&&posthog.capture){posthog.capture(ev,props)}}catch(e){}}
 

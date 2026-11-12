@@ -44,7 +44,8 @@ week" from official releases plus the export, 3 short sections, then "Three thin
 
 ## 4. Write `blog/_content/<slug>.json`
 Schema at the top of `scripts/blog_publish.py`. Required: slug, title, deck, description (150-160 chars),
-keywords, lane, art, read_min, excerpt, body_html (1,200-1,600 words, `<!--MID-->` a third of the way down,
+keywords, lane, image (see "Photos" in BLOG_PIPELINE.md: pick a fitting library photo not used by the 2 newest
+posts, with post-specific alt text; add a new one with `--image-file` if none fits), read_min, excerpt, body_html (1,200-1,600 words, `<!--MID-->` a third of the way down,
 one `.key` pull line, one `.todo` "Three things to do this week", 3 internal links to existing posts),
 mid_card {title, text}, faq (4), bottom_line, sources (2+, official first), cta_title, cta_text. News posts
 also set `as_of`. Budget Shield feature lines: only the four in CONTENT_GUIDELINES §6. Never "free" next to
@@ -56,9 +57,9 @@ python3 -I scripts/blog_publish.py <slug> --dry   # fix every gate failure, neve
 python3 -I scripts/blog_publish.py <slug>
 ```
 Then read the rendered `blog/<slug>.html` top to bottom once: numbers match sources, the disclaimer is there,
-the card sits mid-article, nothing reads like advice.
+the card sits mid-article, the photo fits the topic and has alt text, nothing reads like advice.
 
-Commit: `git add -A && git commit -m "Blog: <title>"`. **Push only if an `origin` remote exists** (it won't until
+Commit (include any new `assets/photos/*.webp` and `blog/images/<slug>-og.jpg`): `git add -A && git commit -m "Blog: <title>"`. **Push only if an `origin` remote exists** (it won't until
 Chris approves `PUBLISH.md`): `git push origin main`, wait 2 minutes, then
 `curl -s -o /dev/null -w "%{http_code}" https://www.healthymoneydaily.com/blog/<slug>` must print 200.
 

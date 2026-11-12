@@ -21,7 +21,8 @@ bills-and-paychecks forecast helps with exactly that. Never a hard sell. Rules: 
 ## Topic queue
 `blog/_content/topics.json`. Each run takes the first entry without `done` whose `target_date` (if any) is
 not more than ~3 days away; seasonal entries come first. Fields: slug, lane, keyword, title (working),
-angle (the Budget Shield tie), sources_hint (where the numbers come from; verify), art, target_date,
+angle (the Budget Shield tie), sources_hint (where the numbers come from; verify), art (legacy, ignored; pick
+an `image` instead), target_date,
 event (news entries tied to a scheduled release, e.g. `fed:2026-12-09`), done. When fewer than 5 are left,
 append 10 in the same shape across the lanes.
 
@@ -35,13 +36,38 @@ source. It never touches trading, and nothing in a post may come from the tradin
 
 ## Files
 - `blog/_content/<slug>.json`: the post (schema at the top of `scripts/blog_publish.py`)
-- `blog/_content/_template.html`: layout (nav, header art, `as_of` note, Budget Shield card at `<!--MID-->`,
-  bottom line, FAQ + FAQPage JSON-LD, sources, CTA box, disclaimer, sticky bar, PostHog)
-- `scripts/blog_publish.py`: gates + renders the HTML, header art, OG image, blog index card, homepage
-  "Latest" (3 newest), sitemap, llms.txt, topics.json
-- `blog/images/<slug>-hero.svg` (+ `<slug>-og.png` via headless Chrome): drawn by the script from `art`
-  (gift, rates, calendar, cart, jar, shield, check). No photos needed. With a Pexels key and `image_queries`
-  it downloads `<slug>-hero.jpg` instead; never hotlink anything.
+- `blog/_content/_template.html`: layout ("quiet wealth" editorial: Bodoni Moda + Hanken Grotesk, ivory/forest/brass,
+  nav, header, full-width photo, `as_of` note, Budget Shield card at `<!--MID-->`, bottom line, FAQ + FAQPage JSON-LD,
+  sources, CTA panel, disclaimer, sticky bar, PostHog). Site-wide styles: `assets/site.css`.
+- `scripts/blog_publish.py`: gates + renders the HTML, OG image, blog index card, homepage "Latest" (3 newest),
+  sitemap, llms.txt, topics.json
+- `blog/_content/photos.json`: the **photo library**. Each key is a photo at `assets/photos/<key>-1600.webp` and
+  `<key>-800.webp`, with alt text, credit, crop focus (`pos`), mood and the lanes it fits.
+- `blog/images/<slug>-og.jpg`: 1200x630 social card, cropped from the post's photo by the script.
+
+## Photos (every post has one)
+The post JSON's `"image"` names a library key: `"image": "colonnade"`, or with alt text written for this post:
+`"image": {"key": "colonnade", "alt": "Morning light along a colonnade of pale stone columns"}`.
+No `image` -> the lane's photo (news `coffee-paper`, howto `planner-pen`, prices `kitchen-brass`,
+check `vintage-desk`). The photo is the post's hero, its blog/home card and its social card.
+
+Picking one:
+1. Read `blog/_content/photos.json` and choose the photo whose `mood`/`fits` matches the post. Avoid the photo used
+   by either of the 2 newest posts so the index doesn't repeat itself.
+2. If nothing fits, add one. Art direction: warm natural light, refined calm interiors, hands with a notebook and
+   coffee, linen, brass, stone, morning light, evening city; real-looking, diverse people when people appear.
+   **No** logos, readable text, money piles, flashy luxury, stock-photo grins, or screens showing a UI.
+   Source: Unsplash (Unsplash License: free for commercial use; never an "Unsplash+" photo) or an original image
+   generated for us (Higgsfield). Never hotlink.
+   ```bash
+   python3 -I scripts/blog_publish.py <slug> --image-file ~/Downloads/photo.jpg \
+     --image-alt "What the photo shows, plainly" --image-credit "Photographer name" \
+     --image-credit-url https://unsplash.com/photos/<id>
+   ```
+   That writes `assets/photos/<slug>-1600.webp` + `-800.webp` (each under ~250 KB), adds `<slug>` to photos.json
+   and sets the post's `image`. Then edit the new library entry's `pos` (e.g. `"40% 60%"`), `mood` and `fits`.
+   For an original image use credit "Hardaway Labs" and leave the credit URL empty.
+3. Alt text describes the photo, not the post ("Gifts wrapped in brown kraft paper under a Christmas tree").
 
 ## Publish by hand
 ```bash

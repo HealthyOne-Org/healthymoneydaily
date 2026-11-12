@@ -14,74 +14,90 @@
 <meta property="og:url" content="https://www.healthymoneydaily.com/blog/{{SLUG}}">
 <meta property="og:image" content="{{OG_IMAGE}}">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#F6F2E9" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#101612" media="(prefers-color-scheme: dark)">
+<meta name="twitter:image" content="{{OG_IMAGE}}">
+<meta name="theme-color" content="#F4EFE5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1612" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/site.css">
+<script>document.documentElement.classList.add('js');setTimeout(function(){if(!window.__hmdReady)document.documentElement.classList.remove('js')},2500)</script>
 <meta name="keywords" content="{{KEYWORDS}}">
 <meta property="article:published_time" content="{{DATE_ISO}}">
 <style>
-.post-wrap{max-width:740px;margin:0 auto;padding:clamp(2.2rem,5vw,3.6rem) 16px 4rem}
-.crumb{font-size:.85rem;margin-bottom:1.6rem;display:flex;gap:.5rem;flex-wrap:wrap;color:var(--ink3)}
-.crumb a{color:var(--ink2);text-decoration:none}
-.post-wrap h1{font-size:clamp(2.3rem,6vw,3.7rem);margin-bottom:1.1rem}
-.deck{font-family:var(--serif);font-size:clamp(1.2rem,2.6vw,1.45rem);line-height:1.45;color:var(--ink2);margin-bottom:1.4rem}
-.byline{display:flex;flex-wrap:wrap;gap:.3rem 1rem;font-size:.88rem;color:var(--ink3);padding:1rem 0;border-top:1px solid var(--ink);border-bottom:1px solid var(--rule);margin-bottom:2rem}
+.article{padding:clamp(2.6rem,6vw,5rem) 0 clamp(3rem,6vw,5rem)}
+.art-head{max-width:900px;margin:0 auto;padding:0 var(--gutter)}
+.crumb{display:flex;gap:.6rem;flex-wrap:wrap;align-items:baseline;font-size:.9rem;color:var(--ink-3);margin-bottom:1.4rem}
+.crumb a{color:var(--ink-2);text-decoration:none}
+.crumb a:hover{color:var(--ink)}
+.crumb .lane{font-family:var(--display);font-style:italic;font-size:1.05rem;color:var(--brass-ink)}
+.art-head h1{font-size:clamp(2.5rem,6.2vw,5rem);line-height:1.02;font-weight:400;margin-bottom:1.3rem}
+.deck{font-family:var(--display);font-size:clamp(1.25rem,2.4vw,1.6rem);line-height:1.38;color:var(--ink-2);margin-bottom:1.8rem;max-width:40rem}
+.byline{display:flex;flex-wrap:wrap;gap:.35rem 1.6rem;font-size:.88rem;color:var(--ink-3);padding:1rem 0;border-top:1px solid var(--rule-strong);border-bottom:1px solid var(--rule)}
 .byline strong{color:var(--ink);font-weight:600}
-.hero-fig{margin:0 0 2.4rem}
-.hero-fig img{width:100%;border-radius:6px;border:1px solid var(--rule)}
-.hero-fig figcaption{font-size:.75rem;color:var(--ink3);text-align:right;margin-top:.4rem}
-.asof{font-size:.9rem;color:var(--ink2);background:var(--green-soft);padding:.75rem 1rem;border-radius:6px;margin-bottom:1.8rem}
-.post-body h2{font-size:clamp(1.6rem,3.4vw,2.1rem);margin:2.6rem 0 .9rem}
-.post-body h3{font-size:1.3rem;margin:1.8rem 0 .5rem}
-.post-body p,.post-body li{color:var(--ink2);font-size:1.08rem;line-height:1.72}
-.post-body p{margin-bottom:1.25rem}
-.post-body strong{color:var(--ink)}
-.post-body ul,.post-body ol{margin:0 0 1.4rem 1.3rem}
-.post-body li{margin-bottom:.55rem;padding-left:.2rem}
-.post-body table{width:100%;border-collapse:collapse;margin:1.4rem 0 1.8rem;font-size:.98rem}
-.post-body th,.post-body td{text-align:left;padding:.65rem .5rem;border-bottom:1px solid var(--rule);vertical-align:top}
-.post-body th{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);border-bottom:1px solid var(--ink)}
-.post-body td{color:var(--ink2)}
+.art-hero{max-width:1360px;margin:clamp(2rem,4vw,3rem) auto clamp(2.4rem,5vw,4rem);padding:0 var(--gutter)}
+.art-hero img{width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--paper-2)}
+.art-hero figcaption{font-size:.75rem;color:var(--ink-3);margin-top:.6rem;text-align:right}
+.art-hero figcaption a{color:inherit}
+@media(max-width:700px){.art-hero{padding:0}.art-hero img{aspect-ratio:4/3}.art-hero figcaption{padding:0 var(--gutter)}}
+.art-body{max-width:720px;margin:0 auto;padding:0 var(--gutter)}
+.asof{font-size:.92rem;color:var(--ink-2);border-left:2px solid var(--brass);padding:.2rem 0 .2rem 1rem;margin-bottom:2.2rem}
+.post-body > p:first-child::first-letter{font-family:var(--display);float:left;font-size:4.6em;line-height:.82;padding:.06em .1em 0 0;color:var(--ink)}
+.post-body h2{font-size:clamp(1.8rem,3.4vw,2.5rem);margin:3.2rem 0 1rem}
+.post-body h3{font-size:1.45rem;margin:2.2rem 0 .6rem}
+.post-body p,.post-body li{color:var(--ink-2);font-size:1.12rem;line-height:1.75}
+.post-body p{margin-bottom:1.35rem}
+.post-body strong{color:var(--ink);font-weight:600}
+.post-body a{color:var(--link)}
+.post-body ul,.post-body ol{margin:0 0 1.5rem 1.3rem}
+.post-body li{margin-bottom:.6rem;padding-left:.25rem}
+.post-body li::marker{color:var(--brass)}
+.post-body table{width:100%;border-collapse:collapse;margin:1.6rem 0 2rem;font-size:1rem;font-variant-numeric:tabular-nums}
+.post-body th,.post-body td{text-align:left;padding:.75rem .6rem .75rem 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.post-body th{font-weight:600;font-size:.86rem;color:var(--ink);border-bottom:1px solid var(--rule-strong)}
+.post-body td{color:var(--ink-2)}
 .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.key{border-left:3px solid var(--gold);padding:.2rem 0 .2rem 1.2rem;margin:2rem 0}
-.key p{font-family:var(--serif);font-size:1.3rem;line-height:1.45;color:var(--ink);margin:0}
-.todo{border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:1.2rem 0 .4rem;margin:2.2rem 0}
-.todo h3{margin-top:0 !important}
-.app-card{display:grid;grid-template-columns:64px 1fr auto;gap:1rem;align-items:center;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:1.2rem 0;margin:2.4rem 0}
+.key{margin:2.8rem 0;padding:1.6rem 0;border-top:1px solid var(--rule-strong);border-bottom:1px solid var(--rule)}
+.key p{font-family:var(--display);font-size:clamp(1.45rem,2.8vw,1.9rem);line-height:1.3;color:var(--ink) !important;margin:0 !important}
+.todo{background:var(--paper-2);padding:1.8rem clamp(1.2rem,3vw,2rem) .8rem;margin:2.8rem 0;border-top:2px solid var(--brass)}
+.todo h3,.todo h2{margin-top:0 !important}
+.app-card{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:1.1rem;align-items:center;border-top:1px solid var(--rule-strong);border-bottom:1px solid var(--rule);padding:1.4rem 0;margin:2.8rem 0}
 .app-card img{width:64px;height:64px;border-radius:15px}
-.app-card .t{font-family:var(--serif);font-weight:600;font-size:1.2rem;color:var(--ink);margin:0 0 .15rem}
-.app-card .d{font-size:.95rem;color:var(--ink2);margin:0;line-height:1.5}
-@media(max-width:560px){.app-card{grid-template-columns:56px 1fr}.app-card img{width:56px;height:56px}.app-card .btn{grid-column:1/-1}}
-.sources{margin:2.6rem 0 0;padding-top:1.2rem;border-top:1px solid var(--ink)}
-.sources h2{font-size:1.35rem;margin:0 0 .8rem}
-.sources ol{margin:0 0 0 1.2rem;font-size:.95rem;color:var(--ink2)}
-.sources li{margin-bottom:.45rem}
-.sources li span{color:var(--ink3)}
-.faq h3{font-size:1.2rem}
-.cta-box{background:var(--band-bg);color:var(--band-ink);border-radius:10px;padding:2.2rem 1.6rem;margin:3rem 0 1.4rem;text-align:center}
-.cta-box h2{color:var(--band-ink);font-size:1.7rem;margin:0 0 .6rem}
-.cta-box p{color:color-mix(in srgb,var(--band-ink) 85%,transparent);margin:0 auto 1.3rem;max-width:32rem}
-.cta-box .btn{background:var(--band-ink);color:var(--band-bg)}
-.cta-box .fine{font-size:.78rem;margin:1rem 0 0}
-.post-disc{font-size:.85rem;line-height:1.6;color:var(--ink3);border-top:1px solid var(--rule);padding-top:1.1rem;margin-top:1.6rem}
-.post-disc strong{color:var(--ink2)}
-#hmd-sticky{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--card);border-top:1px solid var(--rule);box-shadow:0 -8px 24px rgba(20,32,26,.08);padding:.6rem 16px calc(.6rem + env(safe-area-inset-bottom,0px))}
-#hmd-sticky .in{max-width:740px;margin:0 auto;display:flex;align-items:center;gap:.7rem}
-#hmd-sticky img{width:36px;height:36px;border-radius:9px;flex-shrink:0}
-#hmd-sticky .tx{flex:1;font-size:.9rem;color:var(--ink2);line-height:1.3;min-width:0}
-#hmd-sticky .tx strong{color:var(--ink)}
-#hmd-sticky .btn{padding:.5rem .95rem;font-size:.85rem}
-#hmd-sticky button{background:none;border:0;color:var(--ink3);font-size:1.5rem;cursor:pointer;line-height:1;padding:0 .2rem}
-body.has-sticky{padding-bottom:76px}
+.app-card .t{font-family:var(--display);font-weight:500;font-size:1.35rem;line-height:1.15;color:var(--ink) !important;margin:0 0 .2rem !important}
+.app-card .d{font-size:.98rem !important;color:var(--ink-2);margin:0 !important;line-height:1.5 !important}
+.app-card .btn{padding:.7rem 1.15rem}
+@media(max-width:560px){.app-card{grid-template-columns:56px minmax(0,1fr)}.app-card img{width:56px;height:56px}.app-card .btn{grid-column:1/-1}}
+.faq h3{font-size:1.3rem}
+.sources{margin:3.2rem 0 0;padding-top:1.4rem;border-top:1px solid var(--rule-strong)}
+.sources h2{font-size:1.5rem;margin:0 0 .9rem}
+.sources ol{margin:0 0 0 1.3rem;font-size:.96rem;color:var(--ink-2)}
+.sources li{margin-bottom:.5rem}
+.sources li::marker{color:var(--brass-ink);font-variant-numeric:tabular-nums}
+.sources li span{color:var(--ink-3)}
+.cta-box{background:var(--forest);color:var(--on-forest);padding:clamp(2rem,5vw,3rem) clamp(1.4rem,4vw,2.8rem);margin:3.6rem 0 1.6rem;display:grid;grid-template-columns:auto minmax(0,1fr);gap:1.2rem 1.6rem;align-items:start}
+.cta-box > img{width:76px;height:76px;border-radius:18px;box-shadow:0 0 0 1px rgba(210,178,113,.45)}
+.cta-box h2{color:var(--on-forest);font-size:clamp(1.6rem,3vw,2.1rem);margin:0 0 .6rem}
+.cta-box p{color:var(--on-forest-2);margin:0 0 1.3rem}
+.cta-box .fine{font-size:.8rem;margin:1rem 0 0}
+@media(max-width:520px){.cta-box{grid-template-columns:1fr}}
+.post-disc{font-size:.86rem;line-height:1.65;color:var(--ink-3);border-top:1px solid var(--rule);padding-top:1.2rem;margin-top:1.8rem}
+.post-disc strong{color:var(--ink-2)}
+.post-disc a{color:var(--ink-2)}
+#hmd-sticky{position:fixed;left:0;right:0;bottom:0;z-index:60;background:color-mix(in srgb,var(--paper) 94%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--rule);padding:.65rem var(--gutter) calc(.65rem + env(safe-area-inset-bottom,0px))}
+#hmd-sticky .in{max-width:720px;margin:0 auto;display:flex;align-items:center;gap:.8rem}
+#hmd-sticky img{width:38px;height:38px;border-radius:9px;flex-shrink:0}
+#hmd-sticky .tx{flex:1;font-size:.88rem;color:var(--ink-2);line-height:1.3;min-width:0;display:flex;flex-direction:column}
+#hmd-sticky .tx strong{color:var(--ink);font-family:var(--display);font-weight:500;font-size:1.02rem}
+#hmd-sticky .btn{padding:.55rem 1rem;font-size:.85rem}
+#hmd-sticky button{background:none;border:0;color:var(--ink-3);font-size:1.6rem;cursor:pointer;line-height:1;padding:.2rem .3rem}
+body.has-sticky{padding-bottom:78px}
 #hmd-sticky .short{display:none}
-@media(max-width:520px){#hmd-sticky .long{display:none}#hmd-sticky .short{display:inline}#hmd-sticky .tx{font-size:.85rem}#hmd-sticky .btn{padding:.45rem .7rem;font-size:.8rem}}
+@media(max-width:520px){#hmd-sticky .long{display:none}#hmd-sticky .short{display:inline}#hmd-sticky .tx{font-size:.82rem}#hmd-sticky .btn{padding:.5rem .8rem;font-size:.8rem}}
 </style>
+
 <script type="application/ld+json">
 {{ARTICLE_LD}}
 </script>
@@ -93,25 +109,29 @@ body.has-sticky{padding-bottom:76px}
 if(!/^(localhost|127\.0\.0\.1)$/.test(location.hostname)){posthog.init('phc_vSKzzfR42VZJEoZTw2EG5QbjHtL85dCPSSJfY5z2WFLj',{api_host:'https://us.i.posthog.com',person_profiles:'identified_only',capture_pageview:true,disable_session_recording:true,loaded:function(ph){ph.register({site:'healthymoneydaily'})}});}
 </script>
 </head><body>
+<a class="skip" href="#main">Skip to content</a>
 <nav class="nav" aria-label="Main">
   <div class="wrap">
-    <a class="brand" href="/"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#1F5B41"/><path d="M9 8v16M23 8v16M9 16h14" stroke="#F6F2E9" stroke-width="3.2" stroke-linecap="round"/><path d="M23 8c3-3 6-2 6-2s0 4-4 5" fill="#C9A456"/></svg>Healthy Money Daily</a>
-    <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
-    <div class="nav-links">
+    <a class="brand" href="/">Healthy Money Daily</a>
+    <button class="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><span></span><span></span><span></span></button>
+    <div class="nav-links" id="nav-links">
       <a href="/blog" aria-current="page">Blog</a>
       <a href="/#lanes">What we cover</a>
       <a href="/about">About</a>
-      <a class="btn btn-green" data-placement="nav" rel="noopener" href="https://apps.apple.com/app/id6766591206?pt=128318750&amp;ct=hmd_nav&amp;mt=8">Budget Shield</a>
+      <a class="nav-app" data-placement="nav" rel="noopener" href="https://apps.apple.com/app/id6766591206?pt=128318750&amp;ct=hmd_nav&amp;mt=8"><img src="/assets/budget-shield.jpg" alt="" width="26" height="26">Budget Shield</a>
     </div>
   </div>
 </nav>
-<main>
-<article class="post-wrap">
-  <div class="crumb"><a href="/blog">Blog</a><span>/</span><span>{{LANE}}</span></div>
-  <h1>{{TITLE}}</h1>
-  <p class="deck">{{DECK}}</p>
-  <div class="byline"><span>By <strong>Chris Hardaway</strong></span><span>{{DATE_HUMAN}}</span><span>{{READ_MIN}} min read</span><span>Education, not advice</span></div>
+<main id="main">
+<article class="article">
+  <header class="art-head">
+    <p class="crumb"><a href="/blog">Blog</a><span aria-hidden="true">/</span><span class="lane">{{LANE}}</span></p>
+    <h1>{{TITLE}}</h1>
+    <p class="deck">{{DECK}}</p>
+    <div class="byline"><span>By <strong>Chris Hardaway</strong></span><time datetime="{{DATE_ISO}}">{{DATE_HUMAN}}</time><span>{{READ_MIN}} min read</span><span>Education, not advice</span></div>
+  </header>
   {{HERO}}
+  <div class="art-body">
   {{AS_OF}}
   <div class="post-body">
 {{BODY}}
@@ -132,20 +152,27 @@ if(!/^(localhost|127\.0\.0\.1)$/.test(location.hostname)){posthog.init('phc_vSKz
     </ol>
   </section>
 
-  <div class="cta-box">
-    <h2>{{CTA_TITLE}}</h2>
-    <p>{{CTA_TEXT}}</p>
-    <a class="btn" data-placement="cta_box" rel="noopener" href="https://apps.apple.com/app/id6766591206?pt=128318750&amp;ct=hmd_cta&amp;mt=8"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.37 12.6c-.03-2.6 2.12-3.85 2.22-3.91-1.21-1.77-3.09-2.01-3.76-2.04-1.6-.16-3.12.94-3.93.94-.81 0-2.06-.92-3.39-.89-1.74.03-3.35 1.01-4.25 2.57-1.81 3.14-.46 7.8 1.3 10.35.86 1.25 1.89 2.65 3.23 2.6 1.3-.05 1.79-.84 3.36-.84 1.57 0 2.01.84 3.38.81 1.4-.02 2.28-1.27 3.13-2.53.99-1.45 1.4-2.85 1.42-2.92-.03-.01-2.72-1.04-2.75-4.14zM13.79 4.97c.71-.86 1.19-2.06 1.06-3.25-1.02.04-2.26.68-3 1.54-.66.76-1.23 1.98-1.08 3.15 1.14.09 2.3-.58 3.02-1.44z"/></svg>Budget Shield on the App Store</a>
-    <p class="fine">iPhone app by Hardaway Labs, the publisher of this blog.</p>
-  </div>
+  <aside class="cta-box" aria-label="Budget Shield">
+    <img src="/assets/budget-shield.jpg" alt="Budget Shield app icon" width="76" height="76">
+    <div>
+      <h2>{{CTA_TITLE}}</h2>
+      <p>{{CTA_TEXT}}</p>
+      <a class="btn btn-ivory" data-placement="cta_box" rel="noopener" href="https://apps.apple.com/app/id6766591206?pt=128318750&amp;ct=hmd_cta&amp;mt=8"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.37 12.6c-.03-2.6 2.12-3.85 2.22-3.91-1.21-1.77-3.09-2.01-3.76-2.04-1.6-.16-3.12.94-3.93.94-.81 0-2.06-.92-3.39-.89-1.74.03-3.35 1.01-4.25 2.57-1.81 3.14-.46 7.8 1.3 10.35.86 1.25 1.89 2.65 3.23 2.6 1.3-.05 1.79-.84 3.36-.84 1.57 0 2.01.84 3.38.81 1.4-.02 2.28-1.27 3.13-2.53.99-1.45 1.4-2.85 1.42-2.92-.03-.01-2.72-1.04-2.75-4.14zM13.79 4.97c.71-.86 1.19-2.06 1.06-3.25-1.02.04-2.26.68-3 1.54-.66.76-1.23 1.98-1.08 3.15 1.14.09 2.3-.58 3.02-1.44z"/></svg>Budget Shield on the App Store</a>
+      <p class="fine">iPhone app by Hardaway Labs, the publisher of this blog.</p>
+    </div>
+  </aside>
 
   <p class="post-disc"><strong>Disclaimer:</strong> This post is general education, not financial, investment, tax or legal advice. It doesn't recommend any stock or investment. Rates and prices change; check the linked official sources for the latest numbers. Healthy Money Daily is published by Hardaway Labs LLC, which makes Budget Shield. <a href="/disclaimer">Full disclaimer</a>.</p>
+  </div>
 </article>
 </main>
 <footer>
   <div class="wrap">
-    <div class="row">
-      <a class="brand" href="/"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#1F5B41"/><path d="M9 8v16M23 8v16M9 16h14" stroke="#F6F2E9" stroke-width="3.2" stroke-linecap="round"/><path d="M23 8c3-3 6-2 6-2s0 4-4 5" fill="#C9A456"/></svg>Healthy Money Daily</a>
+    <div class="foot">
+      <div>
+        <a class="brand" href="/">Healthy Money Daily</a>
+        <p class="tagline">Money news and budgeting, in plain English. New posts every Tuesday and Thursday.</p>
+      </div>
       <nav aria-label="Footer">
         <a href="/blog">Blog</a>
         <a href="/about">About</a>
@@ -155,14 +182,14 @@ if(!/^(localhost|127\.0\.0\.1)$/.test(location.hostname)){posthog.init('phc_vSKz
       </nav>
     </div>
     <p class="disc">Healthy Money Daily is published by Hardaway Labs LLC, which also makes the Budget Shield app. Everything here is general education, not financial, investment, tax or legal advice. We do not recommend stocks or other investments. <a href="/disclaimer">Read the full disclaimer.</a></p>
-    <div class="disc">&copy; 2026 Hardaway Labs LLC</div>
+    <p class="disc">&copy; 2026 Hardaway Labs LLC. Photography from Unsplash, credited on each page.</p>
   </div>
 </footer>
 <div id="hmd-sticky" role="region" aria-label="Budget Shield" hidden>
   <div class="in">
-    <img src="/assets/budget-shield.jpg" alt="" width="36" height="36">
-    <span class="tx"><strong>Budget Shield</strong><span class="long"> &middot; see your next 30 days of bills before they hit</span><span class="short"> &middot; your next 30 days of bills</span></span>
-    <a class="btn btn-green" data-placement="sticky" rel="noopener" href="https://apps.apple.com/app/id6766591206?pt=128318750&amp;ct=hmd_sticky&amp;mt=8">Get&nbsp;the&nbsp;app</a>
+    <img src="/assets/budget-shield.jpg" alt="" width="38" height="38">
+    <span class="tx"><strong>Budget Shield</strong><span class="long">See your next 30 days of bills before they hit</span><span class="short">Your next 30 days of bills</span></span>
+    <a class="btn btn-ink" data-placement="sticky" rel="noopener" href="https://apps.apple.com/app/id6766591206?pt=128318750&amp;ct=hmd_sticky&amp;mt=8">Get&nbsp;the&nbsp;app</a>
     <button id="hmd-sticky-close" aria-label="Close">&times;</button>
   </div>
 </div>
