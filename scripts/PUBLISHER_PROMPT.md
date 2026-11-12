@@ -62,6 +62,10 @@ Commit: `git add -A && git commit -m "Blog: <title>"`. **Push only if an `origin
 Chris approves `PUBLISH.md`): `git push origin main`, wait 2 minutes, then
 `curl -s -o /dev/null -w "%{http_code}" https://www.healthymoneydaily.com/blog/<slug>` must print 200.
 
+After the push is live (the new post URL returns 200), tell Bing about it:
+`python3 -I scripts/indexnow_ping.py https://www.healthymoneydaily.com/blog/<slug> https://www.healthymoneydaily.com/blog https://www.healthymoneydaily.com/sitemap.xml`
+(a failure here is worth one line in the report, not a reason to stop).
+
 ## 6. Report (one short message)
 `Healthy Money Daily: <title> (<lane>, <words> words) <URL or "committed locally, not live">.` Plus one line
 if you chose news over the queue (which event, which official source) and one line for anything skipped or
