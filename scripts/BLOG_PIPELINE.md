@@ -105,3 +105,7 @@ PostHog doesn't initialise on localhost, so local previews never pollute the pro
 - `<!--MID-->` a third of the way down. One `.key` line, one `.todo` "Three things to do this week".
 - One bridge paragraph naming Budget Shield's real feature for the topic. No App Store links in the body.
 - News posts set `"as_of"` and say odds are odds.
+
+
+## Styling changes reach phones
+Browsers keep `/assets/*` for a week. Every page links `site.css`/`site.js` with `?v=<hash>`; `blog_publish.py` refreshes it after each publish. After editing `assets/site.css` or `site.js` by hand, run `python3 -I scripts/stamp_assets.py` before pushing, or phones that visited before see new pages with old styling.

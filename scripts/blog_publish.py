@@ -416,6 +416,14 @@ def main() -> None:
     update_sitemap(a.slug, date, a.dry)
     update_llms(post, a.dry)
     mark_topic_done(a.slug, date, a.dry)
+    if not a.dry:
+        # Fresh ?v= on site.css/site.js links, so phones that cached older styling fetch the current one.
+        # (Loaded by path: `python3 -I` leaves the script's folder off sys.path.)
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("stamp_assets", Path(__file__).with_name("stamp_assets.py"))
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        mod.stamp()
     print(f"Done. Live URL after deploy: {SITE}/blog/{a.slug}")
 
 
