@@ -1,0 +1,21 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "healthymoneydaily.com" }], "destination": "https://www.healthymoneydaily.com/$1", "permanent": true },
+    { "source": "/ios", "destination": "https://apps.apple.com/app/id6766591206?pt=128318750&ct=hmd_short&mt=8", "permanent": false },
+    { "source": "/app", "destination": "https://apps.apple.com/app/id6766591206?pt=128318750&ct=hmd_short&mt=8", "permanent": false },
+    { "source": "/budget-shield", "destination": "https://apps.apple.com/app/id6766591206?pt=128318750&ct=hmd_short&mt=8", "permanent": false }
+  ],
+  "headers": [
+    { "source": "/(.*)", "headers": [
+      { "key": "X-Content-Type-Options", "value": "nosniff" },
+      { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+      { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+      { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+    ] },
+    { "source": "/assets/(.*)", "headers": [ { "key": "Cache-Control", "value": "public, max-age=604800" } ] },
+    { "source": "/blog/images/(.*)", "headers": [ { "key": "Cache-Control", "value": "public, max-age=604800" } ] },
+    { "source": "/blog/_content/(.*)", "headers": [ { "key": "X-Robots-Tag", "value": "noindex" } ] }
+  ]
+}

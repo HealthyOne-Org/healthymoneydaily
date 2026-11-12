@@ -1,0 +1,15 @@
+# Healthy Money Daily
+> Plain-English personal finance education from Hardaway Labs LLC: what money news (Federal Reserve decisions, inflation reports, tariffs) means for a household's bills, cards, loans and savings, plus practical budgeting how-tos. Education only; no investment advice or stock recommendations. Every number links to an official source (BLS, Federal Reserve, CFPB, FDIC, Federal Register).
+
+## Sections
+- [Blog](https://www.healthymoneydaily.com/blog): all posts, newest first. New posts Tuesdays and Thursdays.
+- [About](https://www.healthymoneydaily.com/about): who writes it, how topics are chosen, where numbers come from, how the site makes money.
+- [Disclaimer](https://www.healthymoneydaily.com/disclaimer): general education, not financial, investment, tax or legal advice; market odds are not predictions.
+- [Privacy](https://www.healthymoneydaily.com/privacy)
+
+## Posts
+- [How to Budget for the Holidays in 2026 (Without a Credit Card Hangover)](https://www.healthymoneydaily.com/blog/how-to-budget-for-the-holidays-2026)
+- [What a December Fed Rate Hike Would Mean for Your Credit Card, Car Loan and Savings](https://www.healthymoneydaily.com/blog/december-fed-rate-hike-what-it-means)
+
+## The app
+- Budget Shield (iPhone, by Hardaway Labs): a 30-day forecast of bills and paychecks (try it with a balance and a paycheck), a warning before a payment won't clear, past-due bill tracking, and savings/vault money kept in the forecast. App Store: https://apps.apple.com/app/id6766591206?pt=128318750&ct=hmd_blog&mt=8

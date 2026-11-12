@@ -1,0 +1,217 @@
+[
+ {
+  "slug": "how-to-budget-for-the-holidays-2026",
+  "lane": "howto",
+  "keyword": "holiday budget 2026",
+  "title": "How to Budget for the Holidays in 2026 (Without a Credit Card Hangover)",
+  "angle": "30-day forecast: put purchases after paydays",
+  "sources_hint": "Fed G.19, BLS CPI, CFPB BNPL",
+  "art": "gift",
+  "done": "2026-11-11"
+ },
+ {
+  "slug": "december-fed-rate-hike-what-it-means",
+  "lane": "news",
+  "keyword": "fed rate hike december 2026",
+  "title": "What a December Fed Rate Hike Would Mean for Your Credit Card, Car Loan and Savings",
+  "angle": "know your low point before December bills",
+  "sources_hint": "FOMC statement, H.15, G.19, FDIC",
+  "art": "rates",
+  "done": "2026-11-11"
+ },
+ {
+  "slug": "thanksgiving-dinner-on-a-budget-2026",
+  "lane": "prices",
+  "keyword": "thanksgiving dinner on a budget",
+  "title": "Thanksgiving Dinner on a Budget in 2026: What Groceries Cost and Where to Save",
+  "angle": "forecast the hosting week against payday",
+  "sources_hint": "BLS CPI food at home (monthly); USDA food price outlook",
+  "art": "cart",
+  "target_date": "2026-11-17"
+ },
+ {
+  "slug": "black-friday-budget-plan-2026",
+  "lane": "prices",
+  "keyword": "black friday budget",
+  "title": "Black Friday 2026 on a Budget: A 15-Minute Plan Before You Shop",
+  "angle": "Safe-to-spend before the sale, payment-won't-clear warning",
+  "sources_hint": "CFPB BNPL; FTC on 'deals' and price comparisons",
+  "art": "cart",
+  "target_date": "2026-11-19"
+ },
+ {
+  "slug": "paycheck-to-paycheck-budget",
+  "lane": "howto",
+  "keyword": "paycheck to paycheck budget",
+  "title": "A Paycheck-to-Paycheck Budget That Actually Works",
+  "angle": "30-day timeline of bills vs paychecks; paycheck preview",
+  "sources_hint": "Fed SHED 2025 ($400 question); CFPB budgeting tools",
+  "art": "calendar",
+  "target_date": "2026-11-24"
+ },
+ {
+  "slug": "money-check-2026-11-30",
+  "lane": "check",
+  "keyword": "money news this week",
+  "title": "The Money Check: What Changed for Your Wallet This Week (Nov 30)",
+  "angle": "one action for the week",
+  "sources_hint": "export file + official sources for every number",
+  "art": "check",
+  "target_date": "2026-12-01"
+ },
+ {
+  "slug": "gift-card-rules-fees-expiration",
+  "lane": "prices",
+  "keyword": "do gift cards expire",
+  "title": "Do Gift Cards Expire? The Federal Rules on Fees and Dates, Before You Buy",
+  "angle": "n/a (light tie: plan gifts in the forecast)",
+  "sources_hint": "CFPB gift card rules (Reg E / CARD Act 5-year rule); FTC",
+  "art": "gift",
+  "target_date": "2026-12-03"
+ },
+ {
+  "slug": "fed-december-2026-decision-explained",
+  "lane": "news",
+  "keyword": "fed decision december 2026",
+  "title": "The Fed's December 9 Decision, Explained: What Changes for Your Card, Loans and Savings",
+  "angle": "variable-rate debts + 30-day forecast",
+  "sources_hint": "FOMC statement Dec 9; H.15; November CPI (Dec 10)",
+  "art": "rates",
+  "target_date": "2026-12-10",
+  "event": "fed:2026-12-09"
+ },
+ {
+  "slug": "january-bills-after-the-holidays",
+  "lane": "howto",
+  "keyword": "how to pay bills after christmas",
+  "title": "January Bills After the Holidays: A Week-by-Week Catch-Up Plan",
+  "angle": "past-due tracking + payment-won't-clear warning",
+  "sources_hint": "CFPB on minimum payments and late fees; Fed G.19",
+  "art": "calendar",
+  "target_date": "2026-12-15"
+ },
+ {
+  "slug": "subscription-audit-before-new-year",
+  "lane": "prices",
+  "keyword": "how to cancel subscriptions",
+  "title": "The 20-Minute Subscription Audit to Do Before the New Year",
+  "angle": "recurring bills in the 30-day forecast",
+  "sources_hint": "FTC click-to-cancel guidance (verify current status); CFPB",
+  "art": "check",
+  "target_date": "2026-12-17"
+ },
+ {
+  "slug": "money-check-2026-12-21",
+  "lane": "check",
+  "keyword": "money news this week",
+  "title": "The Money Check: What Changed for Your Wallet This Week (Dec 21)",
+  "angle": "one action for the week",
+  "sources_hint": "export file + official sources for every number",
+  "art": "check",
+  "target_date": "2026-12-22"
+ },
+ {
+  "slug": "new-year-budget-2027",
+  "lane": "howto",
+  "keyword": "how to make a budget 2027",
+  "title": "How to Set Up a 2027 Budget in One Evening",
+  "angle": "paycheck preview: start with a balance and a paycheck",
+  "sources_hint": "BLS Consumer Expenditure Survey categories",
+  "art": "calendar",
+  "target_date": "2026-12-29"
+ },
+ {
+  "slug": "catch-up-on-past-due-bills",
+  "lane": "howto",
+  "keyword": "how to catch up on past due bills",
+  "title": "Behind on Bills? How to Catch Up, in the Right Order",
+  "angle": "Past Due items stay counted until paid",
+  "sources_hint": "CFPB debt collection rights; utility/hardship programs (LIHEAP via HHS)",
+  "art": "calendar"
+ },
+ {
+  "slug": "how-to-make-a-bills-calendar",
+  "lane": "howto",
+  "keyword": "bills calendar",
+  "title": "How to Make a Bills Calendar That Stops Late Fees",
+  "angle": "the timeline is a bills calendar that does the math",
+  "sources_hint": "CFPB budgeting worksheets",
+  "art": "calendar"
+ },
+ {
+  "slug": "first-500-emergency-fund",
+  "lane": "howto",
+  "keyword": "how to save 500 dollars",
+  "title": "Your First $500 Emergency Fund: A Plan for a Tight Budget",
+  "angle": "Vault/savings stays counted in the forecast",
+  "sources_hint": "Fed SHED 2025 ($400 question); FDIC national savings rate",
+  "art": "jar"
+ },
+ {
+  "slug": "winter-heating-bill-budget",
+  "lane": "prices",
+  "keyword": "how to lower heating bill",
+  "title": "Winter Heating Bills: What to Expect and How to Budget for Them",
+  "angle": "seasonal bill spikes on the 30-day timeline",
+  "sources_hint": "EIA Winter Fuels Outlook; BLS CPI energy; LIHEAP (HHS)",
+  "art": "cart"
+ },
+ {
+  "slug": "do-tariffs-raise-prices",
+  "lane": "news",
+  "keyword": "will tariffs raise prices",
+  "title": "Will Tariffs Raise Prices? How to Read a Tariff Notice and What It Means at the Store",
+  "angle": "forecast with a price cushion",
+  "sources_hint": "Federal Register tariff notices (from the export); BLS import prices",
+  "art": "cart",
+  "event": "tariffs (on a real event day)"
+ },
+ {
+  "slug": "december-jobs-report-what-it-means",
+  "lane": "news",
+  "keyword": "jobs report january 2027",
+  "title": "The December Jobs Report: What It Means for Your Paycheck and Job Search",
+  "angle": "paycheck changes in the forecast",
+  "sources_hint": "BLS Employment Situation (Jan 8, 2027)",
+  "art": "check",
+  "target_date": "2027-01-08",
+  "event": "jobs:2027-01-08"
+ },
+ {
+  "slug": "how-to-avoid-overdraft-fees",
+  "lane": "howto",
+  "keyword": "how to avoid overdraft fees",
+  "title": "How to Avoid Overdraft Fees: 7 Habits That Work",
+  "angle": "warning before a payment won't clear",
+  "sources_hint": "CFPB overdraft resources; FDIC",
+  "art": "shield"
+ },
+ {
+  "slug": "50-30-20-rule-on-a-tight-income",
+  "lane": "howto",
+  "keyword": "50/30/20 rule",
+  "title": "Does the 50/30/20 Rule Work on a Tight Income? A Realistic Version",
+  "angle": "needs vs wants against the 30-day forecast",
+  "sources_hint": "BLS Consumer Expenditure Survey shares",
+  "art": "jar"
+ },
+ {
+  "slug": "cheaper-grocery-swaps",
+  "lane": "prices",
+  "keyword": "how to save money on groceries",
+  "title": "Grocery Swaps That Actually Save Money (With the Official Price Data)",
+  "angle": "grocery line in the forecast",
+  "sources_hint": "BLS CPI food at home detail; USDA food plans",
+  "art": "cart"
+ },
+ {
+  "slug": "tax-refund-plan-2027",
+  "lane": "howto",
+  "keyword": "what to do with tax refund",
+  "title": "Getting a Tax Refund in 2027? A Simple Plan for It",
+  "angle": "Vault/savings + past-due catch-up",
+  "sources_hint": "IRS refund timing; IRS Free File (verify 2027 program)",
+  "art": "jar",
+  "target_date": "2027-01-26"
+ }
+]
