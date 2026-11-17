@@ -27,7 +27,8 @@
   "angle": "forecast the hosting week against payday",
   "sources_hint": "BLS CPI food at home (monthly); USDA food price outlook",
   "art": "cart",
-  "target_date": "2026-11-17"
+  "target_date": "2026-11-17",
+  "done": "2026-11-17"
  },
  {
   "slug": "black-friday-budget-plan-2026",
