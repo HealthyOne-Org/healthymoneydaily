@@ -38,7 +38,8 @@
   "angle": "Safe-to-spend before the sale, payment-won't-clear warning",
   "sources_hint": "CFPB BNPL; FTC on 'deals' and price comparisons",
   "art": "cart",
-  "target_date": "2026-11-19"
+  "target_date": "2026-11-19",
+  "done": "2026-11-24"
  },
  {
   "slug": "paycheck-to-paycheck-budget",
