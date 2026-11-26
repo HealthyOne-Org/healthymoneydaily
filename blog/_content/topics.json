@@ -49,7 +49,8 @@
   "angle": "30-day timeline of bills vs paychecks; paycheck preview",
   "sources_hint": "Fed SHED 2025 ($400 question); CFPB budgeting tools",
   "art": "calendar",
-  "target_date": "2026-11-24"
+  "target_date": "2026-11-24",
+  "done": "2026-11-26"
  },
  {
   "slug": "money-check-2026-11-30",
